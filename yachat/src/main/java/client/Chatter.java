@@ -1,6 +1,8 @@
 package client;
 import java.io.*; 
 import java.net.*; 
+import java.util.concurrent.*;
+import common.Membership;
 
 public class Chatter {
     public static void main(String[] args) throws Exception {
@@ -33,12 +35,19 @@ public class Chatter {
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(tcpSocket.getInputStream())); 
 
         String command = "HELO " + screenName + " " + myIpAddress + " " + udpPort + "\n";
-        System.out.println(command);
         outToServer.writeBytes(command); 
         String response;
-        while ((response = inFromServer.readLine()) != null) { 
-			
-			System.out.println("FROM SERVER: " + response); 
+        while ((response = inFromServer.readLine()) != null) {
+            String[] stdResponse = response.split(" ", 2);
+            if (stdResponse[0].contains("ACPT")) {
+                String[] tokens = stdResponse[1].split(":");
+                Membership membership = new Membership(tokens);
+                System.out.println(membership.acceptMessage(screenName)); 
+            }
+            if (stdResponse[0].contains("RJCT")) {
+                System.out.println("Screen Name already exists: " + stdResponse[1]);
+                break;
+            }
 		}
         tcpSocket.close();
         udpSocket.close();
