@@ -21,12 +21,6 @@ public class Chatter {
         int tcpPort = Integer.parseInt(args[2]);
         String myIpAddress = InetAddress.getLocalHost().getHostAddress();
 
-        // CanCommunicate connection = new TcpConnection(hostAddress, tcpPort);
-        // CanShop shopper = new Shopper(connection);
-
-		// BufferedReader inFromUser = 
-		// 	new BufferedReader(new InputStreamReader(System.in)); 
-
 		Socket tcpSocket = new Socket(hostAddress, tcpPort); 
 		DatagramSocket udpSocket = new DatagramSocket();
         int udpPort = udpSocket.getLocalPort();
@@ -44,8 +38,9 @@ public class Chatter {
         if (tcpCommand.keywordMatches("ACPT")) {
             Membership membership = new Membership(tcpCommand.getPayload());
             System.out.println(membership.acceptMessage(myScreenName));
-            boolean exit = false;
-            do {
+            Thread uiThread = new Thread(new UiHandler(outToServer, udpSocket));
+            uiThread.start();
+            while(true) {
                 byte[] receiveData = new byte[1024];
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length); 
                 udpSocket.receive(receivePacket);
@@ -60,15 +55,18 @@ public class Chatter {
                         membership.Add(memberJoined);
                         System.out.println(memberJoined.screenName + " has joined the chatroom");
                     }
-                    System.out.println(membership.toString());
                 } 
                 if(udpCommand.keywordMatches("EXIT")) {
-                    String memberLeaving = udpCommand.getPayload();
-                    membership.Remove(memberLeaving);
-                    System.out.println(memberLeaving + " has left the chatroom");
-                    System.out.println(membership.toString());
+                    String memberNameLeaving = udpCommand.getPayload();
+                    if (!memberNameLeaving.equals(myScreenName)){
+                        membership.Remove(memberNameLeaving);
+                        System.out.println(memberNameLeaving + " has left the chatroom");
+                    } else {
+                        break;
+                    }
                 }
-            } while(exit == false);
+            }
+            uiThread.interrupt();
         }
         else if (tcpCommand.keywordMatches("ACPT")) {
             System.out.println("Screen Name already exists: " + tcpCommand.getPayload());
@@ -76,8 +74,9 @@ public class Chatter {
         else {
             System.out.println("Do not recoginze response: " + tcpResponse);
         }
+        tcpSocket.shutdownOutput();
         tcpSocket.close();
         udpSocket.close();
-        System.out.println("goodbye!");
+        System.out.println("Client shutdown");
     }
 }
