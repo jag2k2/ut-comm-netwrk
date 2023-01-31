@@ -1,14 +1,10 @@
 package client;
-import java.util.Scanner;
+import java.io.*; 
+import java.net.*; 
 
 public class Chatter {
-    public static void main(String[] args) {
-        String screenName;
-        String hostAddress;
-        int tcpPort;
+    public static void main(String[] args) throws Exception {
         
-        int udpPort;
-
         if (args.length != 3) {
             System.out.println("ERROR: Provide 3 arguments");
             System.out.println("\t(1) <screenName>: Chatter's identity");
@@ -17,19 +13,35 @@ public class Chatter {
             System.exit(-1);
         }
 
-        screenName = args[0];
-        hostAddress = args[1];
-        tcpPort = Integer.parseInt(args[2]);
+        String screenName = args[0];
+        String hostAddress = args[1];
+        int tcpPort = Integer.parseInt(args[2]);
+        String myIpAddress = InetAddress.getLocalHost().getHostAddress();
 
         // CanCommunicate connection = new TcpConnection(hostAddress, tcpPort);
         // CanShop shopper = new Shopper(connection);
 
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNextLine()) {
-            String cmd = sc.nextLine();
-            String[] tokens = cmd.split(" ");
-            System.out.println(cmd);
-        }
+		// BufferedReader inFromUser = 
+		// 	new BufferedReader(new InputStreamReader(System.in)); 
+
+		Socket tcpSocket = new Socket(hostAddress, tcpPort); 
+		DatagramSocket udpSocket = new DatagramSocket();
+        int udpPort = udpSocket.getLocalPort();
+        System.out.println("My Port is: " + udpPort);
+
+		DataOutputStream outToServer = new DataOutputStream(tcpSocket.getOutputStream()); 
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(tcpSocket.getInputStream())); 
+
+        String command = "HELO " + screenName + " " + myIpAddress + " " + udpPort + "\n";
+        System.out.println(command);
+        outToServer.writeBytes(command); 
+        String response;
+        while ((response = inFromServer.readLine()) != null) { 
+			
+			System.out.println("FROM SERVER: " + response); 
+		}
+        tcpSocket.close();
+        udpSocket.close();
         System.out.println("goodbye!");
     }
 }
