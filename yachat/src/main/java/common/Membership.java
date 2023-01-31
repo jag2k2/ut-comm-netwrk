@@ -4,13 +4,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Membership {
     private ConcurrentLinkedQueue<Member> members;
 
-    public Membership(String[] member_strings) {
+    public Membership(String membership_string) {
         this.members = new ConcurrentLinkedQueue<>();
+        String[] member_strings = membership_string.split(":");
         for (String memberString : member_strings) {
-            String[] tokens = memberString.split(" ");
-            Member member = new Member(tokens[0], tokens[1], Integer.parseInt(tokens[2]));
+            Member member = new Member(memberString);
             members.add(member);
         }
+    }
+
+    public void Add(Member member) {
+        members.add(member);
+    }
+
+    public void Remove(String memberName) {
+        members.removeIf(n -> (n.nameEquals(memberName)));
     }
 
     public String acceptMessage(String myName) {

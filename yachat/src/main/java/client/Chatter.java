@@ -3,10 +3,11 @@ import java.io.*;
 import java.net.*; 
 import java.util.concurrent.*;
 import common.Membership;
+import common.Member;
+import common.Command;
 
 public class Chatter {
     public static void main(String[] args) throws Exception {
-        
         if (args.length != 3) {
             System.out.println("ERROR: Provide 3 arguments");
             System.out.println("\t(1) <screenName>: Chatter's identity");
@@ -15,7 +16,7 @@ public class Chatter {
             System.exit(-1);
         }
 
-        String screenName = args[0];
+        String myScreenName = args[0];
         String hostAddress = args[1];
         int tcpPort = Integer.parseInt(args[2]);
         String myIpAddress = InetAddress.getLocalHost().getHostAddress();
@@ -34,21 +35,47 @@ public class Chatter {
 		DataOutputStream outToServer = new DataOutputStream(tcpSocket.getOutputStream()); 
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(tcpSocket.getInputStream())); 
 
-        String command = "HELO " + screenName + " " + myIpAddress + " " + udpPort + "\n";
+        String command = "HELO " + myScreenName + " " + myIpAddress + " " + udpPort + "\n";
         outToServer.writeBytes(command); 
-        String response;
-        while ((response = inFromServer.readLine()) != null) {
-            String[] stdResponse = response.split(" ", 2);
-            if (stdResponse[0].contains("ACPT")) {
-                String[] tokens = stdResponse[1].split(":");
-                Membership membership = new Membership(tokens);
-                System.out.println(membership.acceptMessage(screenName)); 
-            }
-            if (stdResponse[0].contains("RJCT")) {
-                System.out.println("Screen Name already exists: " + stdResponse[1]);
-                break;
-            }
-		}
+        String tcpResponse;
+        tcpResponse = inFromServer.readLine();
+        Command tcpCommand = new Command(tcpResponse);
+
+        if (tcpCommand.keywordMatches("ACPT")) {
+            Membership membership = new Membership(tcpCommand.getPayload());
+            System.out.println(membership.acceptMessage(myScreenName));
+            boolean exit = false;
+            do {
+                byte[] receiveData = new byte[1024];
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length); 
+                udpSocket.receive(receivePacket);
+                String udpResponse = new String(receivePacket.getData());
+                Command udpCommand = new Command(udpResponse);
+                if(udpCommand.keywordMatches("MESG")) {
+                    System.out.println(udpCommand.getPayload());
+                }
+                if(udpCommand.keywordMatches("JOIN")) {
+                    Member memberJoined = new Member(udpCommand.getPayload());
+                    if (!memberJoined.screenName.equals(myScreenName)) {
+                        membership.Add(memberJoined);
+                        System.out.println(memberJoined.screenName + " has joined the chatroom");
+                    }
+                    System.out.println(membership.toString());
+                } 
+                if(udpCommand.keywordMatches("EXIT")) {
+                    String memberLeaving = udpCommand.getPayload();
+                    membership.Remove(memberLeaving);
+                    System.out.println(memberLeaving + " has left the chatroom");
+                    System.out.println(membership.toString());
+                }
+            } while(exit == false);
+        }
+        else if (tcpCommand.keywordMatches("ACPT")) {
+            System.out.println("Screen Name already exists: " + tcpCommand.getPayload());
+        }
+        else {
+            System.out.println("Do not recoginze response: " + tcpResponse);
+        }
         tcpSocket.close();
         udpSocket.close();
         System.out.println("goodbye!");
