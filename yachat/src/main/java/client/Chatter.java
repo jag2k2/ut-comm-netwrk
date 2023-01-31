@@ -72,7 +72,7 @@ public class Chatter {
             }
             uiThread.interrupt();
         }
-        else if (tcpCommand.keywordMatches("ACPT")) {
+        else if (tcpCommand.keywordMatches("RJCT")) {
             System.out.println("Screen Name already exists: " + tcpCommand.getPayload());
         }
         else {
