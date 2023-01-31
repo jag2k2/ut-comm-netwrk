@@ -20,8 +20,9 @@ The following commands may be issued by the client
 - `mkdir bin`
 - `javac -d bin src/main/java/**/*.java`
 - `cd bin`
-- `java Chatter <screen-name> <address> <tcp-port>`
-- `java Server`
+- `jar cf YaChat.jar **/*.class`
+- `java -cp YaChat.jar client.Chatter <screen-name> <address> <tcp-port>`
+- `java -cp YaChat.jar server.Server`
 
 ## Contributors
 - [Jeff Tipps](https://github.com/jag2k2) jt45679
