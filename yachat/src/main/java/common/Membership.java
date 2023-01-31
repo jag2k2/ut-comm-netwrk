@@ -1,4 +1,8 @@
 package common;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Membership {
@@ -19,6 +23,16 @@ public class Membership {
 
     public void Remove(String memberName) {
         members.removeIf(n -> (n.nameEquals(memberName)));
+    }
+
+    public void Send(String command, DatagramSocket udpSocket) throws IOException {
+        for (Member member : members) {
+            byte[] sendData = new byte[1024]; 
+            sendData = command.getBytes();
+            InetAddress memberAddress = InetAddress.getByName(member.ipAddress);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, memberAddress, member.udpPort);
+            udpSocket.send(sendPacket);
+        }
     }
 
     public String acceptMessage(String myName) {

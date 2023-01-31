@@ -38,7 +38,7 @@ public class Chatter {
         if (tcpCommand.keywordMatches("ACPT")) {
             Membership membership = new Membership(tcpCommand.getPayload());
             System.out.println(membership.acceptMessage(myScreenName));
-            Thread uiThread = new Thread(new UiHandler(outToServer, udpSocket));
+            Thread uiThread = new Thread(new UiHandler(outToServer, udpSocket, myScreenName, membership));
             uiThread.start();
             while(true) {
                 byte[] receiveData = new byte[1024];
