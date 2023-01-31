@@ -38,6 +38,7 @@ public class Chatter {
         if (tcpCommand.keywordMatches("ACPT")) {
             Membership membership = new Membership(tcpCommand.getPayload());
             System.out.println(membership.acceptMessage(myScreenName));
+            System.out.print(myScreenName + ": ");
             Thread uiThread = new Thread(new UiHandler(outToServer, udpSocket, myScreenName, membership));
             uiThread.start();
             while(true) {
@@ -46,6 +47,8 @@ public class Chatter {
                 udpSocket.receive(receivePacket);
                 String udpResponse = new String(receivePacket.getData());
                 Command udpCommand = new Command(udpResponse);
+                System.out.print("\n");
+                LineDeleter.DeleteLastLine();
                 if(udpCommand.keywordMatches("MESG")) {
                     System.out.println(udpCommand.getPayload());
                 }
@@ -65,6 +68,7 @@ public class Chatter {
                         break;
                     }
                 }
+                System.out.print(myScreenName + ": ");
             }
             uiThread.interrupt();
         }

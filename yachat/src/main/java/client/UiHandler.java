@@ -25,15 +25,16 @@ public class UiHandler implements Runnable{
     public void run() {
         BufferedReader userReader = new BufferedReader(new InputStreamReader(System.in));
         while (!Thread.interrupted()) { 
-            String userComment = null;
+            String userInput = null;
             try {
-                userComment = userReader.readLine();
-                if (userComment == null) {
+                userInput = userReader.readLine();
+                if (userInput == null) {
                     String command = "EXIT\n";
                     outToServer.writeBytes(command);
                     break; 
                 } else {
-                    String command = "MESG " + myScreenName + ": " + userComment + "\n";
+                    LineDeleter.DeleteLastLine();
+                    String command = "MESG " + myScreenName + ": " + userInput + "\n";
                     membership.Send(command, udpSocket);
                 }
             } catch (IOException err) {
