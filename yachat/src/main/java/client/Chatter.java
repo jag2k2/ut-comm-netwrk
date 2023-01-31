@@ -1,7 +1,6 @@
 package client;
 import java.io.*; 
 import java.net.*; 
-import java.util.concurrent.*;
 import common.Membership;
 import common.Member;
 import common.Command;
