@@ -26,16 +26,5 @@ public class MemD {
         } catch (IOException e){
             System.err.println("Server aborted: " + e.toString());
         }
-
-
-
-        // try {
-            // commandHandlerThread.join();//set up the critical section once and only once
-            // udpListenerThread.join(); //set up the udpListener once and only once
-            // tcpListenerThread.join(); //set up the tcpListener once and only once
-        // } catch(InterruptedException err){
-        //     System.out.println(err.toString());
-        //     System.out.println("deleting all threads");
-        // }
     }
 }
