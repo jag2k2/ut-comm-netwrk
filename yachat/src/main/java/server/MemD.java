@@ -3,7 +3,7 @@ import java.io.*;
 import java.net.*;
 import common.Membership;
 
-public class Server {
+public class MemD {
     public static void main (String[] args) throws IOException {
         int tcpPort;
         if (args.length != 1) {
