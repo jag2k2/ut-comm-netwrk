@@ -34,7 +34,6 @@ public class TcpHandler implements Runnable{
                         String response = "";
                         if (membership.ScreenNameExists(newMember.screenName)){
                             response = "RJCT " + newMember.screenName + "\n";
-                            System.out.print(response);
                             responseWriter.print(response);
                             responseWriter.flush();
                             clientConnection.close();
