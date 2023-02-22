@@ -8,5 +8,5 @@ This repo includes a chatter client application that implements the YaChat Chatr
 - `javac -d bin src/main/java/**/*.java`
 - `cd bin`
 - `jar cf YaChat.jar **/*.class`
+- `java -cp YaChat.jar server.MemD <tcp-port>`
 - `java -cp YaChat.jar client.Chatter <screen-name> <address> <tcp-port>`
-- `java -cp YaChat.jar server.Server` (IN WORK)
