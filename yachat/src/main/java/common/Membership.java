@@ -6,10 +6,9 @@ import java.net.InetAddress;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Membership {
-    private ConcurrentLinkedQueue<Member> members;
+    private ConcurrentLinkedQueue<Member> members = new ConcurrentLinkedQueue<>();
 
     public Membership(String membership_string) {
-        this.members = new ConcurrentLinkedQueue<>();
         String[] member_strings = membership_string.split(":");
         for (String memberString : member_strings) {
             Member member = new Member(memberString);
@@ -17,8 +16,19 @@ public class Membership {
         }
     }
 
+    public Membership() {}
+
     public void Add(Member member) {
         members.add(member);
+    }
+
+    public boolean ScreenNameExists(String screenName){
+        for (Member member : members){
+            if (member.nameEquals(screenName)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void Remove(String memberName) {
@@ -53,7 +63,11 @@ public class Membership {
     public String toString() {
         String membershipString = "";
         for (Member member : members) {
-            membershipString += member.screenName + " " + member.ipAddress + " " + Integer.toString(member.udpPort) + "\n";
+            membershipString += member.screenName + " " + member.ipAddress + " " + Integer.toString(member.udpPort) + ":";
+        }
+        int delimPosition = membershipString.lastIndexOf(':');
+        if (delimPosition >= 0){
+            membershipString = membershipString.substring(0, delimPosition);
         }
         return membershipString;
     }
