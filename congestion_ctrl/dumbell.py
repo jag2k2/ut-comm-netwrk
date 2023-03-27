@@ -20,7 +20,7 @@ def simpleTest():
     dumpNodeConnections(net.hosts)
     print( "Testing network connectivity" )
     net.pingAll()
-    h1, h2, h3, h4 = net.net('h1', 'h2', 'h3', 'h4')
+    h1, h2, h3, h4 = net.get('h1', 'h2', 'h3', 'h4')
     host_addrs = dict({'h1': h1.IP(), 'h2': h2.IP(), 'h3': h3.IP(), 'h4': h4.IP()})
     popens = dict()
     print("Starting servers h2 and h4")
