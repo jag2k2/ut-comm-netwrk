@@ -28,7 +28,7 @@ def simpleTest():
     popens[h4] = h4.popen(['iperf', '-s', '-p', '5567', '-i', '1'])
     print("Starting clients h1 and h3")
     popens[h1] = h1.popen(['iperf -c {0} -p 5566 -t 15'.format(h2.IP())])
-    popens[h1] = h3.popen(['iperf -c {0} -p 5566 -t 15'.format(h4.IP())])
+    popens[h3] = h3.popen(['iperf -c {0} -p 5566 -t 15'.format(h4.IP())])
     popens[h1].wait()
     popens[h3].wait()
     popens[h2].terminate()
