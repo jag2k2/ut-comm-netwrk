@@ -13,7 +13,7 @@ class DumbellTopo(Topo):
 
 def simpleTest():
     "Create and test a simple network"
-    topo = SingleSwitchTopo()
+    topo = BumbellTopo()
     net = Mininet(topo)
     net.start()
     print( "Dumping host connections" )
