@@ -16,8 +16,8 @@ def simpleTest():
     topo = DumbellTopo()
     net = Mininet(topo)
     net.start()
-    print( "Dumping host connections" )
-    dumpNodeConnections(net.hosts)
+    # print( "Dumping host connections" )
+    # dumpNodeConnections(net.hosts)
     # print( "Testing network connectivity" )
     # net.pingAll()
     h1, h2, h3, h4 = net.get('h1', 'h2', 'h3', 'h4')
@@ -33,6 +33,7 @@ def simpleTest():
     popens[h3] = h3.popen(['iperf -c {0} -p 5566 -i 1 -w 16m -M 1460 -N -t 15 -y C > iperf_test_h1-h2_15ms.txt'.format(h4.IP())])
     popens[h1].wait()
     popens[h3].wait()
+    
     popens[h2].terminate()
     popens[h4].terminate()
     popens[h2].wait()
