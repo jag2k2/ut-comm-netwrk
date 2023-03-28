@@ -3,14 +3,15 @@ from mininet.net import Mininet
 from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
+    def build(self, delay=2):
         """ Create the topology by overriding the class parent's method.
             :param  delay   One way propagation delay, delay = RTT / 2. Default is 2ms.
         """
         # The bandwidth (bw) is in Mbps, delay in milliseconds and queue size is in packets
-        backbone_params = dict(bw=984, delay='21ms', max_queue_size=82*21, use_htb=True)  # backbone router interface tc params
-        access_params = dict(bw=252, delay='0ms', max_queue_size=(21*21*20)/100, use_htb=True)  # access router intf tc params
+        backbone_params = dict(bw=984, delay='{0}ms'.format(delay), max_queue_size=82*delay, use_htb=True)  # backbone router interface tc params
+        access_params = dict(bw=252, delay='0ms', max_queue_size=(21*delay*20)/100, use_htb=True)  # access router intf tc params
         # TODO: remove queue size from hosts and try.
-        host_params = dict(bw=960, delay='0ms', max_queue_size=80*21, use_htb=True)  # host interface tc params
+        host_params = dict(bw=960, delay='0ms', max_queue_size=80*delay, use_htb=True)  # host interface tc params
 
         backbone_switch1 = self.addSwitch('bs1')
         backbone_switch2 = self.addSwitch('bs2')
