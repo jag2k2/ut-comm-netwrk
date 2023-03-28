@@ -1,26 +1,21 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
-from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
     def build(self):
         switch = self.addSwitch('s1')
-        # Python's range(N) generates 0..N-1
         for h in range(4):
             host = self.addHost('h%s' % (h + 1))
             self.addLink(host, switch)
 
 def simpleTest():
-    "Create and test a simple network"
     topo = DumbellTopo()
     net = Mininet(topo)
     net.start()
 
     h1, h2, h3, h4 = net.get('h1', 'h2', 'h3', 'h4')
-    host_addrs = dict({'h1': h1.IP(), 'h2': h2.IP(), 'h3': h3.IP(), 'h4': h4.IP()})
     popens = dict()
-    
     print("Starting servers h2 and h4")
     popens[h2] = h2.popen('iperf3 -s -p 5566')
     popens[h4] = h4.popen('iperf3 -s -p 5566')
@@ -38,6 +33,5 @@ def simpleTest():
     net.stop()
 
 if __name__ == '__main__':
-    # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
