@@ -1,5 +1,6 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
+from mininet.link import TCLink
 from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
