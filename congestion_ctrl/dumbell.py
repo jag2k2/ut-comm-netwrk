@@ -37,8 +37,8 @@ class DumbellTopo(Topo):
         self.addLink(access_switch1, source2, cls=TCLink, **host_params)
 
         # Link the receivers to Access Switch 2
-        self.addLink(access_switch2, receiver1, cls=TCLink, **hi_params)
-        self.addLink(access_switch2, receiver2, cls=TCLink, **hi_params)
+        self.addLink(access_switch2, receiver1, cls=TCLink, **host_params)
+        self.addLink(access_switch2, receiver2, cls=TCLink, **host_params)
 
 def commTest():
     topo = DumbellTopo()
