@@ -22,12 +22,12 @@ def simpleTest():
     popens = dict()
     
     print("Starting servers h2 and h4")
-    popens[h2] = h2.popen('iperf -s -p 5566')
-    popens[h4] = h4.popen('iperf -s -p 5566')
+    popens[h2] = h2.popen('iperf3 -s -p 5566')
+    popens[h4] = h4.popen('iperf3 -s -p 5566')
     
     print("Starting clients h1 and h3")
-    popens[h1] = h1.popen('iperf -c {0} -p 5566 -i 1 -M 1460 -N -t 15 -y C > iperf_test_h1-h2_15s.txt'.format(h2.IP()), shell=True)
-    popens[h3] = h3.popen('iperf -c {0} -p 5566 -i 1 -M 1460 -N -t 15 -y C > iperf_test_h3-h4_15s.txt'.format(h4.IP()), shell=True)
+    popens[h1] = h1.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf_test_h1-h2_15s.txt'.format(h2.IP()), shell=True)
+    popens[h3] = h3.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf_test_h3-h4_15s.txt'.format(h4.IP()), shell=True)
     popens[h1].wait()
     popens[h3].wait()
 
