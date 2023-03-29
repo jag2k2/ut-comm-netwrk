@@ -10,15 +10,15 @@ class DumbellTopo(Topo):
         bits = 8
 
         backbone_speed = 82
-        backbone_bandwidth = backbone_speed * packet_size * 1000 * bits
+        backbone_bandwidth = backbone_speed * packet_size * 1000 * bits / 1000000
         backbone_params = dict(bw=backbone_bandwidth, delay='{0}ms'.format(delay), max_queue_size=backbone_speed*delay)
         
         access_speed = 21
-        access_bandwidth = access_speed * packet_size * 1000 * bits
+        access_bandwidth = access_speed * packet_size * 1000 * bits / 1000000
         access_params = dict(bw=access_bandwidth, delay='0ms', max_queue_size=(0.2*access_speed*delay))
         
         host_speed = 80
-        host_bandwidth = host_speed * packet_size * 1000 * bits
+        host_bandwidth = host_speed * packet_size * 1000 * bits / 1000000
         host_params = dict(bw=host_bandwidth, delay='0ms', max_queue_size=host_speed*delay)
 
         backbone_switch1 = self.addSwitch('bs1')
