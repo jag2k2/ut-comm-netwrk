@@ -5,14 +5,21 @@ from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
     def build(self, delay=2):
-        """ Create the topology by overriding the class parent's method.
-            :param  delay   One way propagation delay, delay = RTT / 2. Default is 2ms.
-        """
         # The bandwidth (bw) is in Mbps, delay in milliseconds and queue size is in packets
-        backbone_params = dict(bw=984, delay='{0}ms'.format(delay), max_queue_size=82*delay, use_htb=True)  # backbone router interface tc params
-        access_params = dict(bw=252, delay='0ms', max_queue_size=(21*delay*20)/100, use_htb=True)  # access router intf tc params
-        # TODO: remove queue size from hosts and try.
-        host_params = dict(bw=960, delay='0ms', max_queue_size=80*delay, use_htb=True)  # host interface tc params
+        packet_size = 1500
+        bits = 8
+
+        backbone_speed = 82
+        backbone_bandwidth = backbone_speed * packet_size * 1000 * bits
+        backbone_params = dict(bw=backbone_bandwidth, delay='{0}ms'.format(delay), max_queue_size=backbone_speed*delay)
+        
+        access_speed = 21
+        access_bandwidth = access_speed * packet_size * 1000 * bits
+        access_params = dict(bw=access_bandwidth, delay='0ms', max_queue_size=(0.2*access_speed*delay)
+        
+        host_speed = 80
+        host_bandwidth = host_speed * packet_size * 1000 * bits
+        host_params = dict(bw=host_bandwidth, delay='0ms', max_queue_size=host_speed*delay)
 
         backbone_switch1 = self.addSwitch('bs1')
         backbone_switch2 = self.addSwitch('bs2')
