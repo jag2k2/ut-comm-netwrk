@@ -4,7 +4,7 @@ from mininet.link import TCLink
 from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
-    def build(self, delay=delay):
+    def build(self, delay=0):
         # The bandwidth (bw) is in Mbps, delay in milliseconds and queue size is in packets
         packet_size = 1500
         bits = 8
