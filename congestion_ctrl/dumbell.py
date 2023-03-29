@@ -59,8 +59,8 @@ def commTest():
     popens[receiver2] = receiver2.popen('iperf3 -s -p 5566')
     
     print("Starting senders")
-    popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf_test_h1-h2_15s.txt'.format(receiver1.IP()), shell=True)
-    popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf_test_h3-h4_15s.txt'.format(receiver2.IP()), shell=True)
+    popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf3_data_1.txt'.format(receiver1.IP()), shell=True)
+    popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -i 1 -M 1460 -N -t 15 > iperf3_data_2.txt'.format(receiver2.IP()), shell=True)
     popens[source1].wait()
     popens[source2].wait()
 
