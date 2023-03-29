@@ -4,7 +4,7 @@ from mininet.link import TCLink
 from mininet.log import setLogLevel
 
 class DumbellTopo(Topo):
-    def build(self):
+    def build(self, delay=delay):
         # The bandwidth (bw) is in Mbps, delay in milliseconds and queue size is in packets
         packet_size = 1500
         bits = 8
@@ -48,7 +48,7 @@ class DumbellTopo(Topo):
         self.addLink(access_switch2, receiver2, cls=TCLink, **host_params)
 
 def commTest(delay=2):
-    topo = DumbellTopo(delay)
+    topo = DumbellTopo(delay=delay)
     net = Mininet(topo)
     net.start()
 
