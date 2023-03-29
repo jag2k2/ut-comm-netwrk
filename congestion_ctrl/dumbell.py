@@ -15,7 +15,7 @@ class DumbellTopo(Topo):
         
         access_speed = 21
         access_bandwidth = access_speed * packet_size * 1000 * bits
-        access_params = dict(bw=access_bandwidth, delay='0ms', max_queue_size=(0.2*access_speed*delay)
+        access_params = dict(bw=access_bandwidth, delay='0ms', max_queue_size=(0.2*access_speed*delay))
         
         host_speed = 80
         host_bandwidth = host_speed * packet_size * 1000 * bits
