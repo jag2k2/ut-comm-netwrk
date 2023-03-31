@@ -3,6 +3,7 @@ from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.link import TCLink
 from mininet.log import setLogLevel
+from mininet.util import dumpNodeConnections
 
 class DumbellTopo(Topo):
     def build(self, delay=0):
@@ -52,6 +53,7 @@ def commTest(delay=2):
     topo = DumbellTopo(delay=delay)
     net = Mininet(topo)
     net.start()
+    dumpNodeConnections(net.hosts)
 
     source1, source2, receiver1, receiver2 = net.get('src1', 'src2', 'rcv1', 'rcv2')
     popens = dict()
