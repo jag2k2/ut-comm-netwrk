@@ -62,15 +62,15 @@ def commTest(delay=2):
     popens[receiver2] = receiver2.popen('iperf3 -s -p 5566')
     
     print("Starting Flow 1")
-    # popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -i 1 -C cubic -t 200 > iperf3_data_flow1_{1}_{2}.txt'.format(receiver1.IP(), 'default', delay), shell=True)
-    popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -V -4 -i 1 -C cubic -f m -d -t 20 > iperf3_data_flow1_{1}_{2}.txt'.format(receiver1.IP(), 'default', delay), shell=True)
+    popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -i 1 -C cubic -t 200 > iperf3_data_flow1_{1}_{2}.txt'.format(receiver1.IP(), 'default', delay), shell=True)
+    #popens[source1] = source1.popen('iperf3 -c {0} -p 5566 -V -4 -i 1 -C cubic -f m -d -t 20 > iperf3_data_flow1_{1}_{2}.txt'.format(receiver1.IP(), 'default', delay), shell=True)
 
     print("Delaying Flow 2")
-    sleep(10)
+    sleep(100)
 
     print("Starting Flow 2")
-    # popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -i 1 -C cubic -t 100 > iperf3_data_flow2_{1}_{2}.txt'.format(receiver2.IP(), 'default', delay), shell=True)
-    popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -V -4 -i 1 -C cubic -f m -d -t 10 > iperf3_data_flow2_{1}_{2}.txt'.format(receiver2.IP(), 'default', delay), shell=True)
+    popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -i 1 -C cubic -t 100 > iperf3_data_flow2_{1}_{2}.txt'.format(receiver2.IP(), 'default', delay), shell=True)
+    #popens[source2] = source2.popen('iperf3 -c {0} -p 5566 -V -4 -i 1 -C cubic -f m -d -t 10 > iperf3_data_flow2_{1}_{2}.txt'.format(receiver2.IP(), 'default', delay), shell=True)
     popens[source1].wait()
     popens[source2].wait()
 
