@@ -83,5 +83,5 @@ def commTest(delay=2, algo='cubic'):
 if __name__ == '__main__':
     setLogLevel('info')
     delays = [21,81,162]
-    for delay in delays
+    for delay in delays:
         commTest(delay, 'cubic')
