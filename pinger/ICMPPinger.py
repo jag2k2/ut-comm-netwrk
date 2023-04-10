@@ -39,36 +39,23 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 		if whatReady[0] == []: # Timeout
 			return "Request timed out."
 	
-		timeReceived = time.time() 
+		timeresponses = time.time() 
 		recPacket, addr = mySocket.recvfrom(1024)
 	       
 	    #Fill in start
-		# icmp_header = recPacket[20:28]	
-		# icmp_type, code, checksum, id, sequence = struct.unpack("bbHHh", icmp_header)
-		# (sent_time,) = struct.unpack_from("d", recPacket, offset=28)
-		
+		icmp_header = recPacket[20:28]	
+		icmp_type, code, checksum, id, sequence = struct.unpack("bbHHh", icmp_header)
+		(sent_time,) = struct.unpack_from("d", recPacket, offset=28)
 		# print(f"ICMP type: {icmp_type}, Code: {code}, Checksum: {checksum}")
 		# print(f"ID: {id}, Sequence: {sequence}, Sent time: {sent_time}" )
-
-		# (address, _) = addr
-		# print(f"addr: {addr}, address: {address}, destAddr: {destAddr}, id: {ID}")
-		# if address == destAddr and id == ID:
-		# 	return timeReceived - sent_time 
-		icmpHeader = recPacket[20:28]
-		# Use the stuct library to unpack the binary encoded data
-		# "bbHHh" => char | char | uint | uint | int
-		icmpType, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
-		print("type: %d  code: %d " %(icmpType, code))
-		if type != 8 and packetID == ID:
-			bytesInDouble = struct.calcsize("d")
-			timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
-			return timeReceived - float(timeSent)
-		else:
-			print("ERR")
+		(address, _) = addr
+		if address == destAddr and id == ID:
+			return timeresponses - sent_time 
        	#Fill in end
 
 		timeLeft = timeLeft - howLongInSelect
 		if timeLeft <= 0:
+			print(f"ICMP type: {icmp_type}, Code: {code}")
 			return "Request timed out."
 	
 def sendOnePing(mySocket, destAddr, ID):
@@ -104,10 +91,10 @@ def doOnePing(destAddr, timeout):
 	mySocket = socket(AF_INET, SOCK_RAW, icmp)
 	myID = os.getpid() & 0xFFFF  # Return the current process i
 	sendOnePing(mySocket, destAddr, myID)
-	delay = receiveOnePing(mySocket, myID, timeout, destAddr)
+	rtt = receiveOnePing(mySocket, myID, timeout, destAddr)
 	
 	mySocket.close()
-	return delay
+	return rtt
 	
 def ping(host, timeout=1):
 	# timeout=1 means: If one second goes by without a reply from the server,
@@ -115,13 +102,30 @@ def ping(host, timeout=1):
 	dest = gethostbyname(host)
 	print("Pinging " + dest + " using Python:")
 	print("")
+	round_trip_times = []
 	# Send ping requests to a server separated by approximately one second
-	while 1 :
-		delay = doOnePing(dest, timeout)
-		print(delay)
-		time.sleep(1)# one second
-	return delay
+	try:
+		while 1 :
+			rtt = doOnePing(dest, timeout)
+			round_trip_times.append(rtt)
+			if not rtt or rtt == "Request timed out.":
+				print(rtt)
+			else:
+				print(f"{round(float(rtt)*1000.0, 1)} ms")
+			time.sleep(1) # one second
+	except KeyboardInterrupt:
+		attempts = len(round_trip_times)
+		lost = round_trip_times.count("Request timed out.")
+		responses = attempts - lost
+		packet_loss = float(lost)/float(attempts)
+		valid_values = [time for time in round_trip_times if time != "Request timed out."]
+		print();
+		print(f"{attempts} ping attempts, {responses} responses, {round(packet_loss*100, 2)}% packet loss")
+		if (len(valid_values) > 0):
+			print(f"min rtt: {round(min(valid_values)*1000.0,1)} ms, max rtt: {round(max(valid_values)*1000.0,1)} ms, avg rtt: {round(sum(valid_values)*1000.0/len(valid_values), 1)} ms")
+		return
 	
-#ping("142.250.115.139")
+#ping("google.com")
 #ping("127.0.0.1")
-ping("192.168.0.1")
+#ping("192.168.0.1")
+ping("192.168.0.100")
