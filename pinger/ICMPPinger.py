@@ -125,7 +125,7 @@ def ping(host, timeout=1):
 			print(f"min rtt: {round(min(valid_values)*1000.0,1)} ms, max rtt: {round(max(valid_values)*1000.0,1)} ms, avg rtt: {round(sum(valid_values)*1000.0/len(valid_values), 1)} ms")
 		return
 	
-#ping("google.com")
-#ping("127.0.0.1")
-#ping("192.168.0.1")
-ping("192.168.0.100")
+ping("uschicago-hostzealot.metercdn.net")
+#ping("uk-hostzealot.metercdn.net")
+#ping("hk-hostzealot.metercdn.net")
+#ping("br-euforta.metercdn.com")
